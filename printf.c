@@ -1,5 +1,6 @@
 #include "main.h"
 #include <unistd.h>
+#include <stdarg.h>
 
 /**
  * _putchar - writes a character to stdout
@@ -44,6 +45,44 @@ int print_string(va_list args)
 }
 
 /**
+ * print_number - prints an integer
+ * @n: integer to print
+ * Return: number of characters printed
+ */
+int print_number(int n)
+{
+	unsigned int num;
+	int count = 0;
+
+	if (n < 0)
+	{
+		count += _putchar('-');
+		num = -n;
+	}
+	else
+	{
+		num = n;
+	}
+
+	if (num / 10)
+		count += print_number(num / 10);
+
+	count += _putchar((num % 10) + '0');
+
+	return (count);
+}
+
+/**
+ * print_int - handles %d and %i
+ * @args: argument list
+ * Return: number of characters printed
+ */
+int print_int(va_list args)
+{
+	return (print_number(va_arg(args, int)));
+}
+
+/**
  * _printf - prints formatted output
  * @format: format string
  * @...: additional arguments
@@ -67,6 +106,10 @@ int _printf(const char *format, ...)
 					break;
 				case 's':
 					count += print_string(args);
+					break;
+				case 'd':
+				case 'i':
+					count += print_int(args);
 					break;
 				case '%':
 					count += _putchar('%');
