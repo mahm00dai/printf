@@ -13,21 +13,22 @@ int _putchar(char c)
 
 /**
  * print_char - handles %c
- * @c: character to print
+ * @args: argument list
  * Return: number of characters printed
  */
-int print_char(char c)
+int print_char(va_list args)
 {
-    return (_putchar(c));
+    return (_putchar(va_arg(args, int)));
 }
 
 /**
  * print_string - handles %s
- * @str: string to print
+ * @args: argument list
  * Return: number of characters printed
  */
-int print_string(char *str)
+int print_string(va_list args)
 {
+    char *str = va_arg(args, char *);
     int i = 0;
 
     if (str == NULL)
@@ -57,20 +58,22 @@ int _printf(const char *format, ...)
 
     while (format && format[i])
     {
-        if (format[i] == '%' &&
-            (format[i + 1] == 'c' || format[i + 1] == 's' || format[i + 1] == '%'))
+        if (format[i] == '%' && format[i + 1])
         {
-            if (format[i + 1] == 'c')
+            switch (format[i + 1])
             {
-                count += print_char(va_arg(args, int));
-            }
-            else if (format[i + 1] == 's')
-            {
-                count += print_string(va_arg(args, char *));
-            }
-            else if (format[i + 1] == '%')
-            {
+            case 'c':
+                count += print_char(args);
+                break;
+            case 's':
+                count += print_string(args);
+                break;
+            case '%':
                 count += _putchar('%');
+                break;
+            default:
+                count += _putchar(format[i]);
+                count += _putchar(format[i + 1]);
             }
             i++;
         }
